@@ -1,0 +1,25 @@
+name: CD Deploy  # Название финального этапа
+
+# ТРИГГЕР: Запускаться только после успешного завершения пайплайна "CD Pre-Check"
+on:
+  workflow_run:
+    workflows: ["CD Pre-Check"]
+    types:
+      - completed
+
+jobs:
+  deploy-to-server:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Сборка Docker-образа
+      run: |
+        echo "=== СТАРТ ФИНАЛЬНОГО ДЕПЛОЯ ==="
+        echo "Собираем Docker-образ: docker build -t async-app:latest ."
+
+    - name: Отправка на боевой сервер
+      run: |
+        echo "Подключаемся по SSH к серверу..."
+        echo "Обновляем контейнеры..."
+        echo "Поздравляем! Новая версия Async-приложения успешно запущена для пользователей! 🚀"

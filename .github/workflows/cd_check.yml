@@ -1,0 +1,26 @@
+name: CD Pre-Check  # Название второго этапа
+
+# ТРИГГЕР: Запускаться только тогда, когда пайплайн "Continuous Integration" завершился УСПЕШНО
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+
+jobs:
+  integration-tests:
+    # Запускаем только если предыдущий воркфлоу завершился именно успехом, а не провалом
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Имитация поднятия базы данных
+      run: |
+        echo "=== СТАРТ CD PRE-CHECK ==="
+        echo "Поднимаем базу данных PostgreSQL в Docker..."
+        echo "База готова. Подключаем Python-приложение..."
+        
+    - name: Запуск интеграционных тестов
+      run: |
+        echo "Проверяем асинхронные запросы к базе данных..."
+        echo "Все интеграционные тесты сданы на отлично!"

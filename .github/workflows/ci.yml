@@ -1,0 +1,35 @@
+name: Continuous Integration
+
+# ТРИГГЕР: Конвейер запускается при каждом push в ветку main
+on:
+  push:
+    branches: [ "main" ]
+
+# РАБОТА: Что именно делать роботам?
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest  # Выделяется чистый сервер на Linux
+
+    steps:
+    # Шаг 1: Скачиваем твой код из репозитория на этот виртуальный сервер
+    - name: Checkout project code
+      uses: actions/checkout@v4
+
+    # Шаг 2: Устанавливаем Python
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    # Шаг 3: Имитируем проверку кода
+    - name: Run code quality checks
+      run: |
+        echo "=== ЗАПУСК ЛИНТЕРА ==="
+        echo "Робот проверяет стиль кода... Ошибок нет!"
+        
+    # Шаг 4: Имитируем запуск тестов
+    - name: Run unit tests
+      run: |
+        echo "=== ЗАПУСК ТЕСТОВ ==="
+        python -c "print('Все тесты пройдены успешно! Код стабилен.')"
+
